@@ -1,0 +1,26 @@
+{
+  "name": "koolbase-react-native",
+  "version": "1.0.0",
+  "description": "React Native SDK for Koolbase — auth, database, storage, realtime, feature flags, and functions in one package.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "keywords": ["koolbase", "react-native", "baas", "firebase-alternative", "flutter"],
+  "author": "Kennedy Owusu",
+  "license": "MIT",
+  "homepage": "https://koolbase.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kennedyowusu/koolbase-react-native"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "react-native": ">=0.70.0"
+  }
+}

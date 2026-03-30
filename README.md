@@ -71,3 +71,27 @@ Full docs at [docs.koolbase.com](https://docs.koolbase.com)
 ## License
 
 MIT
+
+## Offline-First Database
+
+Koolbase v1.1.0 ships with offline-first support powered by AsyncStorage.
+```typescript
+// Cache-first reads — returns local data instantly
+const { records, isFromCache } = await Koolbase.db.query('posts', {
+  filters: { published: true },
+  limit: 20,
+});
+
+if (isFromCache) {
+  console.log('Served from local cache');
+}
+
+// Optimistic writes — saved locally first, synced when online
+await Koolbase.db.insert('posts', { title: 'Hello', published: true });
+
+// Manual sync
+await Koolbase.db.syncPendingWrites();
+```
+
+The SDK automatically syncs pending writes when network connectivity is restored.
+

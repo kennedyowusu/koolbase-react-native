@@ -55,6 +55,17 @@ export interface QueryOptions {
 export interface QueryResult {
   records: KoolbaseRecord[];
   total: number;
+  isFromCache?: boolean;
+}
+
+export interface PendingWrite {
+  id: string;
+  type: 'insert' | 'update' | 'delete';
+  collection?: string;
+  recordId?: string;
+  data?: Record<string, unknown>;
+  retries: number;
+  createdAt: string;
 }
 
 // ─── Storage ───────────────────────────────────────────────────────────────

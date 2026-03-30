@@ -119,6 +119,28 @@ export interface VersionCheckResult {
 
 // ─── Functions ─────────────────────────────────────────────────────────────
 
+export enum FunctionRuntime {
+  Deno = 'deno',
+  Dart = 'dart',
+}
+
+export interface DeployOptions {
+  name: string;
+  code: string;
+  runtime?: FunctionRuntime;
+  timeoutMs?: number;
+}
+
+export interface DeployResult {
+  id: string;
+  name: string;
+  runtime: string;
+  version: number;
+  isActive: boolean;
+  timeoutMs: number;
+  lastDeployedAt: string | null;
+}
+
 export interface FunctionInvokeResult {
   statusCode: number;
   data: Record<string, unknown> | null;

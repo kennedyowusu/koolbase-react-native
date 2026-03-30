@@ -95,3 +95,31 @@ await Koolbase.db.syncPendingWrites();
 
 The SDK automatically syncs pending writes when network connectivity is restored.
 
+
+## Functions
+```typescript
+import { Koolbase, FunctionRuntime } from 'koolbase-react-native';
+
+// Deploy a TypeScript function (Deno)
+await Koolbase.functions.deploy({
+  name: 'send-email',
+  code: `
+    export async function handler(ctx) {
+      return { ok: true };
+    }
+  `,
+  runtime: FunctionRuntime.Deno,
+});
+
+// Deploy a Dart function
+await Koolbase.functions.deploy({
+  name: 'process-order',
+  code: dartCode,
+  runtime: FunctionRuntime.Dart,
+});
+
+// Invoke a function
+const result = await Koolbase.functions.invoke('send-email', {
+  to: 'user@example.com',
+});
+```

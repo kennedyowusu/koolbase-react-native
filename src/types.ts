@@ -1,6 +1,7 @@
 export interface KoolbaseConfig {
   publicKey: string;
   baseUrl: string;
+  codePushChannel?: string;
 }
 
 // ─── Auth ──────────────────────────────────────────────────────────────────

@@ -1,4 +1,7 @@
 import { KoolbaseAuth } from './auth';
+import { KoolbaseCodePush } from './code-push';
+export { KoolbaseCodePush } from './code-push';
+export type { BundleManifest, BundlePayload } from './code-push';
 import { KoolbaseDatabase } from './database';
 import { KoolbaseFlags } from './flags';
 import { KoolbaseFunctions } from './functions';
@@ -15,6 +18,7 @@ let _storage: KoolbaseStorage | null = null;
 let _realtime: KoolbaseRealtime | null = null;
 let _functions: KoolbaseFunctions | null = null;
 let _flags: KoolbaseFlags | null = null;
+let _codePush: KoolbaseCodePush | null = null;
 let _initialized = false;
 
 function ensureInitialized() {
@@ -33,6 +37,15 @@ export const Koolbase = {
     _realtime = new KoolbaseRealtime(config);
     _functions = new KoolbaseFunctions(config);
     _flags = new KoolbaseFlags(config, 'rn-device');
+
+    _codePush = new KoolbaseCodePush(config, config.codePushChannel ?? 'stable');
+
+    // Initialize code push — loads cached bundle then checks in background
+    await _codePush.init({
+      appVersion: '1.0.0', // override with your app version
+      platform: 'react-native',
+      deviceId: 'rn-device',
+    });
 
     _initialized = true;
   },
@@ -64,22 +77,36 @@ export const Koolbase = {
 
   isEnabled(key: string): boolean {
     ensureInitialized();
+    // Bundle flag wins over remote flag
+    const bundleFlag = _codePush?.getBundleFlag(key);
+    if (bundleFlag !== undefined) return bundleFlag;
     return _flags!.isEnabled(key);
   },
 
   configString(key: string, fallback = ''): string {
     ensureInitialized();
+    const bundleVal = _codePush?.getBundleConfig(key);
+    if (bundleVal !== undefined) return String(bundleVal);
     return _flags!.getString(key, fallback);
   },
 
   configNumber(key: string, fallback = 0): number {
     ensureInitialized();
+    const bundleVal = _codePush?.getBundleConfig(key);
+    if (bundleVal !== undefined) return typeof bundleVal === 'number' ? bundleVal : Number(bundleVal) || fallback;
     return _flags!.getNumber(key, fallback);
   },
 
   configBool(key: string, fallback = false): boolean {
     ensureInitialized();
+    const bundleVal = _codePush?.getBundleConfig(key);
+    if (bundleVal !== undefined) return typeof bundleVal === 'boolean' ? bundleVal : bundleVal === 'true';
     return _flags!.getBool(key, fallback);
+  },
+
+  get codePush(): KoolbaseCodePush {
+    ensureInitialized();
+    return _codePush!;
   },
 
   checkVersion(currentVersion: string): VersionCheckResult {

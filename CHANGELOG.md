@@ -1,3 +1,7 @@
+## 1.3.1
+
+- Updated README — added Code Push, Analytics, Logic Engine sections, clearer get started guide
+
 ## 1.3.0
 
 ### Analytics

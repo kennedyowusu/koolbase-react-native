@@ -2,6 +2,8 @@ export interface KoolbaseConfig {
   publicKey: string;
   baseUrl: string;
   codePushChannel?: string;
+  analyticsEnabled?: boolean;
+  appVersion?: string;
 }
 
 // ─── Auth ──────────────────────────────────────────────────────────────────

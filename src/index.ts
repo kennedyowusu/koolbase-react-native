@@ -1,5 +1,9 @@
 import { KoolbaseAuth } from './auth';
 import { KoolbaseCodePush } from './code-push';
+import { KoolbaseAnalytics } from './analytics';
+import { KoolbaseLogicEngine, FlowResult } from './logic-engine';
+export { KoolbaseAnalytics } from './analytics';
+export type { FlowResult } from './logic-engine';
 export { KoolbaseCodePush } from './code-push';
 export type { BundleManifest, BundlePayload } from './code-push';
 import { KoolbaseDatabase } from './database';
@@ -19,6 +23,8 @@ let _realtime: KoolbaseRealtime | null = null;
 let _functions: KoolbaseFunctions | null = null;
 let _flags: KoolbaseFlags | null = null;
 let _codePush: KoolbaseCodePush | null = null;
+let _analytics: KoolbaseAnalytics | null = null;
+const _logicEngine = new KoolbaseLogicEngine();
 let _initialized = false;
 
 function ensureInitialized() {
@@ -46,6 +52,12 @@ export const Koolbase = {
       platform: 'react-native',
       deviceId: 'rn-device',
     });
+
+    // Initialize analytics
+    if (config.analyticsEnabled !== false) {
+      _analytics = new KoolbaseAnalytics(config);
+      await _analytics.init(config.appVersion);
+    }
 
     _initialized = true;
   },
@@ -107,6 +119,24 @@ export const Koolbase = {
   get codePush(): KoolbaseCodePush {
     ensureInitialized();
     return _codePush!;
+  },
+
+  get analytics(): KoolbaseAnalytics {
+    ensureInitialized();
+    return _analytics!;
+  },
+
+  executeFlow(flowId: string, context?: Record<string, unknown>): FlowResult {
+    ensureInitialized();
+    const manifest = _codePush?.manifest;
+    if (!manifest) return { hasEvent: false, args: {}, completed: true };
+    return _logicEngine.execute(
+      flowId,
+      manifest.payload.flows ?? {},
+      context ?? {},
+      manifest.payload.config ?? {},
+      manifest.payload.flags ?? {},
+    );
   },
 
   checkVersion(currentVersion: string): VersionCheckResult {

@@ -8,6 +8,8 @@ export interface BundlePayload {
   flags: Record<string, boolean>;
   directives: Record<string, unknown>;
   assets: { images: string[]; json: string[]; fonts: string[] };
+  screens?: Record<string, string>;
+  flows?: Record<string, unknown>;
 }
 
 export interface BundleManifest {

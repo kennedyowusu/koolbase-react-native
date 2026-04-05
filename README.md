@@ -5,7 +5,7 @@
 
 React Native SDK for [Koolbase](https://koolbase.com) — Backend as a Service built for mobile developers.
 
-Auth, database, storage, realtime, functions, feature flags, remote config, version enforcement, code push, logic engine, and analytics — one SDK, one `initialize()` call.
+Auth, database, storage, realtime, functions, feature flags, remote config, version enforcement, code push, logic engine, analytics, and cloud messaging — one SDK, one `initialize()` call.
 
 ---
 
@@ -193,6 +193,32 @@ Koolbase.analytics.setUserProperty('plan', 'pro');
 
 // On logout
 Koolbase.analytics.reset();
+```
+
+---
+
+## Cloud Messaging
+```typescript
+await Koolbase.initialize({
+  publicKey: 'pk_live_xxxx',
+  baseUrl: 'https://api.koolbase.com',
+  messagingEnabled: true,
+});
+
+// Register FCM token (after obtaining from @react-native-firebase/messaging)
+const fcmToken = await messaging().getToken();
+await Koolbase.messaging.registerToken({
+  token: fcmToken,
+  platform: 'android', // or 'ios'
+});
+
+// Send to a specific device
+await Koolbase.messaging.send({
+  to: deviceToken,
+  title: 'Your order is ready',
+  body: 'Pick up at counter 3',
+  data: { order_id: '123' },
+});
 ```
 
 ---

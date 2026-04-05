@@ -1,3 +1,34 @@
+## 1.4.0
+
+### Koolbase Cloud Messaging
+
+- Added `KoolbaseMessaging` — push notification delivery via FCM
+- Added `Koolbase.messaging.registerToken({ token, platform, userId? })` — register FCM device token
+- Added `Koolbase.messaging.send({ to, title, body, data? })` — send push notification to a specific device
+- `KoolbaseConfig` extended with `messagingEnabled` parameter (default: true)
+- Device ID automatically reused from analytics stable device ID (AsyncStorage)
+
+### Usage
+```typescript
+// After obtaining FCM token from @react-native-firebase/messaging
+const fcmToken = await messaging().getToken();
+await Koolbase.messaging.registerToken({
+  token: fcmToken,
+  platform: 'android', // or 'ios'
+});
+
+// Send to a specific device
+await Koolbase.messaging.send({
+  to: deviceToken,
+  title: 'Your order is ready',
+  body: 'Pick up at counter 3',
+  data: { order_id: '123' },
+});
+```
+
+### Setup required
+Add your FCM server key as a project secret named `FCM_SERVER_KEY` in the Koolbase dashboard.
+
 ## 1.3.1
 
 - Updated README — added Code Push, Analytics, Logic Engine sections, clearer get started guide

@@ -4,6 +4,7 @@ export interface KoolbaseConfig {
   codePushChannel?: string;
   analyticsEnabled?: boolean;
   appVersion?: string;
+  messagingEnabled?: boolean;
 }
 
 // ─── Auth ──────────────────────────────────────────────────────────────────

@@ -1,6 +1,10 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KoolbaseAuth } from './auth';
 import { KoolbaseCodePush } from './code-push';
 import { KoolbaseAnalytics } from './analytics';
+import { KoolbaseMessaging } from './messaging';
+export { KoolbaseMessaging } from './messaging';
+export type { RegisterTokenOptions, SendOptions } from './messaging';
 import { KoolbaseLogicEngine, FlowResult } from './logic-engine';
 export { KoolbaseAnalytics } from './analytics';
 export type { FlowResult } from './logic-engine';
@@ -24,6 +28,7 @@ let _functions: KoolbaseFunctions | null = null;
 let _flags: KoolbaseFlags | null = null;
 let _codePush: KoolbaseCodePush | null = null;
 let _analytics: KoolbaseAnalytics | null = null;
+let _messaging: KoolbaseMessaging | null = null;
 const _logicEngine = new KoolbaseLogicEngine();
 let _initialized = false;
 
@@ -57,6 +62,13 @@ export const Koolbase = {
     if (config.analyticsEnabled !== false) {
       _analytics = new KoolbaseAnalytics(config);
       await _analytics.init(config.appVersion);
+    }
+
+    // Initialize messaging
+    if (config.messagingEnabled !== false) {
+      _messaging = new KoolbaseMessaging(config);
+      const storedDeviceId = await AsyncStorage.getItem('koolbase:device_id');
+      _messaging.setDeviceId(storedDeviceId ?? 'rn-device');
     }
 
     _initialized = true;
@@ -137,6 +149,11 @@ export const Koolbase = {
       manifest.payload.config ?? {},
       manifest.payload.flags ?? {},
     );
+  },
+
+  get messaging(): KoolbaseMessaging {
+    ensureInitialized();
+    return _messaging!;
   },
 
   checkVersion(currentVersion: string): VersionCheckResult {

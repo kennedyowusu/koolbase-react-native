@@ -4,6 +4,7 @@ import { KoolbaseCodePush } from './code-push';
 import { KoolbaseAnalytics } from './analytics';
 import { KoolbaseMessaging } from './messaging';
 export { KoolbaseMessaging } from './messaging';
+export { KoolbaseAppleAuth } from './apple-auth';
 export type { RegisterTokenOptions, SendOptions } from './messaging';
 import { KoolbaseLogicEngine, FlowResult } from './logic-engine';
 export { KoolbaseAnalytics } from './analytics';

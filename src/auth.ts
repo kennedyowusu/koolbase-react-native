@@ -95,4 +95,31 @@ export class KoolbaseAuth {
   setSession(session: KoolbaseSession | null): void {
     this.session = session;
   }
+
+
+  async oauthLogin({
+    provider,
+    token,
+    email = '',
+    name = '',
+    avatarUrl = '',
+  }: {
+    provider: string;
+    token: string;
+    email?: string;
+    name?: string;
+    avatarUrl?: string;
+  }): Promise<Record<string, unknown> | null> {
+    try {
+      const response = await fetch(`${this.config.baseUrl}/v1/auth/oauth`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ provider, token, email, name, avatar_url: avatarUrl }),
+      });
+      if (response.ok) return response.json();
+      return null;
+    } catch {
+      return null;
+    }
+  }
 }

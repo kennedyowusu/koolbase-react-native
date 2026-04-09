@@ -1,3 +1,30 @@
+## 1.5.0
+
+### Sign in with Apple
+
+- Added `KoolbaseAppleAuth.signIn()` — Sign in with Apple for React Native
+- Added `KoolbaseAuth.oauthLogin()` — unified OAuth login method
+- Apple identity token verified server-side using Apple's JWKS endpoint
+- Works with any Apple credential provider (bring your own apple-auth library)
+
+### Usage
+
+```typescript
+import { KoolbaseAppleAuth } from 'koolbase-react-native';
+
+const session = await KoolbaseAppleAuth.signIn(async () => {
+  // Use @invertase/react-native-apple-authentication or any other library
+  const credential = await appleAuth.performRequest({
+    requestedOperation: appleAuth.Operation.LOGIN,
+    requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+  });
+  return credential;
+});
+```
+
+### Setup required
+Install @invertase/react-native-apple-authentication and configure your App ID in the Apple Developer portal.
+
 ## 1.4.0
 
 ### Koolbase Cloud Messaging

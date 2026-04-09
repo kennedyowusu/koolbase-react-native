@@ -7,7 +7,9 @@ type FlowNode =
   | { type: 'set'; key: string; value: unknown };
 
 interface FlowCondition {
-  op: 'eq' | 'neq' | 'gt' | 'lt' | 'and' | 'or' | 'exists';
+  op: 'eq' | 'neq' | 'gt' | 'gte' | 'lt' | 'lte' | 'and' | 'or' |
+      'exists' | 'not_exists' | 'contains' | 'starts_with' | 'ends_with' |
+      'in_list' | 'not_in_list' | 'between' | 'is_true' | 'is_false';
   left?: { from: string };
   right?: unknown;
   value?: { from: string };
@@ -123,6 +125,65 @@ export class KoolbaseLogicEngine {
       case 'exists': {
         const val = condition.value ? this.resolve(condition.value.from, ctx) : undefined;
         return val !== null && val !== undefined;
+      }
+      case 'not_exists': {
+        const val = condition.value ? this.resolve(condition.value.from, ctx) : undefined;
+        return val === null || val === undefined;
+      }
+      case 'gte': {
+        const left = Number(condition.left ? this.resolve(condition.left.from, ctx) : undefined);
+        const right = Number(condition.right);
+        return !isNaN(left) && !isNaN(right) && left >= right;
+      }
+      case 'lte': {
+        const left = Number(condition.left ? this.resolve(condition.left.from, ctx) : undefined);
+        const right = Number(condition.right);
+        return !isNaN(left) && !isNaN(right) && left <= right;
+      }
+      case 'contains': {
+        const left = condition.left ? this.resolve(condition.left.from, ctx) : undefined;
+        const right = condition.right;
+        if (typeof left === 'string' && typeof right === 'string') return left.includes(right);
+        if (Array.isArray(left)) return left.includes(right);
+        return false;
+      }
+      case 'starts_with': {
+        const left = condition.left ? this.resolve(condition.left.from, ctx) : undefined;
+        const right = String(condition.right ?? '');
+        return typeof left === 'string' && left.startsWith(right);
+      }
+      case 'ends_with': {
+        const left = condition.left ? this.resolve(condition.left.from, ctx) : undefined;
+        const right = String(condition.right ?? '');
+        return typeof left === 'string' && left.endsWith(right);
+      }
+      case 'in_list': {
+        const left = condition.left ? this.resolve(condition.left.from, ctx) : undefined;
+        const list = condition.right;
+        if (!Array.isArray(list)) return false;
+        return list.some((item) => String(item) === String(left));
+      }
+      case 'not_in_list': {
+        const left = condition.left ? this.resolve(condition.left.from, ctx) : undefined;
+        const list = condition.right;
+        if (!Array.isArray(list)) return true;
+        return !list.some((item) => String(item) === String(left));
+      }
+      case 'between': {
+        const left = Number(condition.left ? this.resolve(condition.left.from, ctx) : undefined);
+        const range = condition.right;
+        if (!Array.isArray(range) || range.length < 2) return false;
+        const min = Number(range[0]);
+        const max = Number(range[1]);
+        return !isNaN(left) && !isNaN(min) && !isNaN(max) && left >= min && left <= max;
+      }
+      case 'is_true': {
+        const left = condition.left ? this.resolve(condition.left.from, ctx) : undefined;
+        return left === true || left === 'true';
+      }
+      case 'is_false': {
+        const left = condition.left ? this.resolve(condition.left.from, ctx) : undefined;
+        return left === false || left === 'false';
       }
       default:
         return false;

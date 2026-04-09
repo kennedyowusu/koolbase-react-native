@@ -223,6 +223,24 @@ await Koolbase.messaging.send({
 
 ---
 
+## Sign in with Apple
+
+```typescript
+import { KoolbaseAppleAuth } from 'koolbase-react-native';
+import { appleAuth } from '@invertase/react-native-apple-authentication';
+
+const session = await KoolbaseAppleAuth.signIn(async () => {
+  return await appleAuth.performRequest({
+    requestedOperation: appleAuth.Operation.LOGIN,
+    requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+  });
+});
+```
+
+Install `@invertase/react-native-apple-authentication` as a peer dependency. Full setup guide at [docs.koolbase.com/auth/oauth](https://docs.koolbase.com/auth/oauth).
+
+---
+
 ## Documentation
 
 Full documentation at [docs.koolbase.com](https://docs.koolbase.com)

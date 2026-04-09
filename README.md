@@ -223,6 +223,28 @@ await Koolbase.messaging.send({
 
 ---
 
+## Logic Engine v2
+
+```typescript
+const result = Koolbase.executeFlow('on_checkout_tap', {
+  plan: user.plan,
+  usage: user.usage,
+});
+
+if (result.hasEvent) {
+  switch (result.eventName) {
+    case 'show_upgrade': navigation.navigate('Upgrade'); break;
+    case 'go_checkout': navigation.navigate('Checkout'); break;
+  }
+}
+```
+
+**v2 operators:** `eq`, `neq`, `gt`, `gte`, `lt`, `lte`, `contains`, `starts_with`, `ends_with`, `in_list`, `not_in_list`, `between`, `is_true`, `is_false`, `exists`, `not_exists`, `and`, `or`
+
+Full docs at [docs.koolbase.com/sdk/logic-engine](https://docs.koolbase.com/sdk/logic-engine).
+
+---
+
 ## Sign in with Apple
 
 ```typescript

@@ -1,3 +1,7 @@
+## 1.6.1
+
+- README update — Logic Engine v2 operators
+
 ## 1.6.0
 
 ### Logic Engine v2 — Richer conditions

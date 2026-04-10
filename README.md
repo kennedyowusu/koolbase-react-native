@@ -1,4 +1,16 @@
-# koolbase-react-native
+# Koolbase React Native SDK
+
+⚠️ ## This package has moved
+
+This package is deprecated.
+
+👉 Install the official version:
+
+```bash
+npm install @techfinityedge/koolbase-react-native
+```
+
+---
 
 [![npm](https://img.shields.io/npm/v/koolbase-react-native.svg)](https://www.npmjs.com/package/koolbase-react-native)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -11,11 +23,12 @@ Auth, database, storage, realtime, functions, feature flags, remote config, vers
 
 ## Get started in 2 minutes
 
-**1. Create a free account at [app.koolbase.com](https://app.koolbase.com)**
+1. Create a free account at [app.koolbase.com](https://app.koolbase.com)
 
-**2. Create a project and copy your public key from Environments**
+2. Create a project and copy your public key from Environments
 
-**3. Add the SDK:**
+3. Add the SDK:
+
 ```bash
 npm install koolbase-react-native
 # or
@@ -23,6 +36,7 @@ yarn add koolbase-react-native
 ```
 
 **4. Initialize at app startup:**
+
 ```typescript
 import { Koolbase } from 'koolbase-react-native';
 
@@ -37,6 +51,7 @@ That's it. Every feature below is now available via `Koolbase.*`.
 ---
 
 ## Authentication
+
 ```typescript
 // Register
 await Koolbase.auth.register({ email: 'user@example.com', password: 'password' });
@@ -57,6 +72,7 @@ await Koolbase.auth.forgotPassword('user@example.com');
 ---
 
 ## Database
+
 ```typescript
 // Insert
 await Koolbase.db.insert('posts', { title: 'Hello', published: true });
@@ -80,6 +96,7 @@ await Koolbase.db.delete('record-id');
 ```
 
 ### Offline-first
+
 ```typescript
 const { records, isFromCache } = await Koolbase.db.query('posts', { limit: 20 });
 if (isFromCache) console.log('Served from local cache');
@@ -90,6 +107,7 @@ await Koolbase.db.syncPendingWrites();
 ---
 
 ## Storage
+
 ```typescript
 const { url } = await Koolbase.storage.upload({
   bucket: 'avatars',
@@ -104,6 +122,7 @@ await Koolbase.storage.delete('avatars', `user-${userId}.jpg`);
 ---
 
 ## Realtime
+
 ```typescript
 const unsubscribe = Koolbase.realtime.subscribe('messages', (event) => {
   if (event.type === 'created') setMessages(prev => [event.record, ...prev]);
@@ -116,6 +135,7 @@ unsubscribe();
 ---
 
 ## Feature Flags & Remote Config
+
 ```typescript
 if (Koolbase.isEnabled('new_checkout')) { ... }
 
@@ -127,6 +147,7 @@ const dark = Koolbase.configBool('force_dark_mode', false);
 ---
 
 ## Version Enforcement
+
 ```typescript
 const result = Koolbase.checkVersion('1.2.3');
 if (result.status === 'force_update') {
@@ -137,6 +158,7 @@ if (result.status === 'force_update') {
 ---
 
 ## Code Push
+
 ```typescript
 await Koolbase.initialize({
   publicKey: 'pk_live_xxxx',
@@ -157,6 +179,7 @@ Koolbase.codePush.applyDirectives();
 ---
 
 ## Logic Engine
+
 ```typescript
 // Define flows in your bundle's flows.json
 // Execute from anywhere in your app
@@ -173,6 +196,7 @@ if (result.hasEvent) {
 ---
 
 ## Analytics
+
 ```typescript
 await Koolbase.initialize({
   publicKey: 'pk_live_xxxx',
@@ -198,6 +222,7 @@ Koolbase.analytics.reset();
 ---
 
 ## Cloud Messaging
+
 ```typescript
 await Koolbase.initialize({
   publicKey: 'pk_live_xxxx',
